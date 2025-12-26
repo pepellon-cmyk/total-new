@@ -56,6 +56,8 @@ pip install -r requirements.txt
 python app.py
 ```
 
+**Nota de Segurança:** O servidor está configurado em modo debug para desenvolvimento. Para ambientes de produção, desative o modo debug no arquivo `app.py` alterando `debug=True` para `debug=False` e use um servidor WSGI apropriado como Gunicorn ou uWSGI.
+
 2. Abra o navegador e acesse:
 ```
 http://localhost:5000
@@ -88,6 +90,22 @@ total-new/
 - **Flask 3.0.0**: Framework web
 - **pandas 2.1.4**: Manipulação e análise de dados
 - **openpyxl 3.1.2**: Leitura/escrita de arquivos Excel
+
+## Segurança
+
+Este projeto implementa as seguintes práticas de segurança:
+
+- ✅ Validação de tipos de arquivo permitidos (.xlsx, .xls, .csv)
+- ✅ Sanitização de nomes de arquivo usando `secure_filename()`
+- ✅ Limite de tamanho de upload (16MB)
+- ✅ Tratamento de erros e exceções
+
+**Importante:** Esta aplicação está configurada para desenvolvimento. Para produção:
+- Desative o modo debug (`debug=False` em app.py)
+- Use um servidor WSGI adequado (Gunicorn, uWSGI)
+- Configure HTTPS
+- Implemente autenticação se necessário
+- Configure backups e logs adequados
 
 ## API Endpoints
 
