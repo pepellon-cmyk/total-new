@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total New - File Processor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Total New</h1>
+            <p class="subtitle">Processador de Arquivos Excel e CSV</p>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📄</div>
+                    <h2>Arraste um arquivo aqui</h2>
+                    <p>ou</p>
+                    <label for="fileInput" class="btn btn-primary">
+                        Selecionar Arquivo
+                    </label>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
+                    <p class="file-info">Formatos aceitos: Excel (.xlsx, .xls) e CSV (.csv)</p>
+                </div>
+            </section>
+
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="file-details">
+                    <h3>Informações do Arquivo</h3>
+                    <div id="fileInfo"></div>
+                </div>
+
+                <div class="data-preview">
+                    <h3>Prévia dos Dados</h3>
+                    <div id="dataPreview"></div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-secondary" id="processBtn">Processar Dados</button>
+                    <button class="btn btn-outline" id="newFileBtn">Novo Arquivo</button>
+                </div>
+            </section>
+
+            <section class="message-section" id="messageSection"></section>
+        </main>
+
+        <footer>
+            <p>kiteforlife &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
