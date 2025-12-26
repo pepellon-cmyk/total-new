@@ -47,7 +47,7 @@ function handleDrop(e) {
     
     const files = e.dataTransfer.files;
     if (files.length > 0) {
-        fileInput.files = files;
+        // Directly handle the dropped file without assigning to fileInput.files
         handleFileSelect({ target: { files: files } });
     }
 }

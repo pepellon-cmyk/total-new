@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 import pandas as pd
 import os
 from io import BytesIO
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -12,6 +13,13 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
+
+
+def allowed_file(filename):
+    """Check if the file has an allowed extension."""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/')
@@ -31,21 +39,23 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No file selected'}), 400
     
-    if file:
+    if file and allowed_file(file.filename):
         try:
-            # Read the file based on extension
-            filename = file.filename.lower()
+            # Secure the filename
+            filename = secure_filename(file.filename)
+            filename_lower = filename.lower()
             
-            if filename.endswith('.xlsx') or filename.endswith('.xls'):
+            # Read the file based on extension
+            if filename_lower.endswith('.xlsx') or filename_lower.endswith('.xls'):
                 df = pd.read_excel(file)
-            elif filename.endswith('.csv'):
+            elif filename_lower.endswith('.csv'):
                 df = pd.read_csv(file)
             else:
                 return jsonify({'error': 'Unsupported file format. Please upload Excel or CSV files.'}), 400
             
             # Get basic info about the dataframe
             info = {
-                'filename': file.filename,
+                'filename': filename,
                 'rows': len(df),
                 'columns': len(df.columns),
                 'column_names': df.columns.tolist(),
@@ -56,6 +66,8 @@ def upload_file():
         
         except Exception as e:
             return jsonify({'error': f'Error processing file: {str(e)}'}), 500
+    
+    return jsonify({'error': 'File type not allowed. Please upload Excel or CSV files.'}), 400
 
 
 @app.route('/api/process', methods=['POST'])
