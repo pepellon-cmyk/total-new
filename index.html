@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kite for Life — Protótipo (mapeamento automático)</title>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Dependências -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="hero-left">
+        <h1>Kite for Life</h1>
+        <p class="subtitle">Importe seu Excel (.xls/.xlsx/.xlsm). O app detecta abas de avaliações e sugere mapeamento automático das colunas.</p>
+        <div class="controls">
+          <input id="fileInput" type="file" accept=".csv,.xls,.xlsx,.xlsm" />
+          <button id="clearBtn" title="Limpar dados">Limpar dados</button>
+        </div>
+        <p class="hint">Após importar, revise o mapeamento sugerido à direita (se necessário) e clique em "Aplicar Mapeamento".</p>
+      </div>
+
+      <div class="hero-right">
+        <div class="glass card-lg">
+          <h3>PROJETO</h3>
+          <p class="project-name">KITE FOR LIFE</p>
+          <div style="margin-top:8px">
+            <small id="loadedSheet" style="color:var(--muted)">Nenhuma aba carregada</small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="panel" id="importPanel">
+        <div class="panel-header">
+          <h2>Importação & Mapeamento</h2>
+          <div class="panel-actions">
+            <select id="sheetSelect"></select>
+            <button id="autoMapBtn" title="Tentar mapear automaticamente">Mapear automático</button>
+            <button id="applyMapBtn">Aplicar Mapeamento</button>
+          </div>
+        </div>
+
+        <div class="panel-body" style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:280px">
+            <h4>Abas detectadas</h4>
+            <ul id="sheetsList" class="sheets-list"></ul>
+          </div>
+
+          <div style="flex:1;min-width:320px">
+            <h4>Mapeamento sugerido</h4>
+            <div id="mappingPanel" class="mapping-panel">
+              <!-- selects de mapeamento serão inseridos aqui -->
+            </div>
+            <div style="margin-top:8px;color:var(--muted)">
+              Campos padrão: Nome, Matrícula, Cargo, Data, Nota, Comentários, Status
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="dashboardPanel">
+        <div class="panel-header">
+          <h2>Dashboard</h2>
+          <div class="panel-actions">
+            <select id="filterStatus"><option value="">Todos status</option></select>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div id="kpis" class="kpi-grid"></div>
+          <div style="height:220px">
+            <canvas id="scoreChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="tablePanel">
+        <div class="panel-header">
+          <h2>Avaliações</h2>
+          <div class="panel-actions">
+            <input id="searchInput" placeholder="Buscar por nome/cargo..." />
+            <button id="addBtn">Adicionar</button>
+            <button id="exportBtn">Exportar CSV</button>
+          </div>
+        </div>
+        <div class="panel-body table-wrap" id="tableWrap"></div>
+        <div style="margin-top:8px;display:flex;justify-content:center;gap:8px">
+          <button id="prevPage">« Anterior</button>
+          <div id="pageInfo" style="align-self:center;color:var(--muted)">Página 0/0</div>
+          <button id="nextPage">Próxima »</button>
+        </div>
+      </section>
+
+      <section class="panel" id="formPanel" style="display:none">
+        <div class="panel-header"><h2>Formulário de Avaliação</h2></div>
+        <div class="panel-body">
+          <form id="evalForm">
+            <div class="form-row">
+              <label>Nome</label><input name="Nome" required />
+            </div>
+            <div class="form-row">
+              <label>Matrícula</label><input name="Matrícula" />
+            </div>
+            <div class="form-row">
+              <label>Cargo</label><input name="Cargo" />
+            </div>
+            <div class="form-row">
+              <label>Data</label><input name="Data" type="date" />
+            </div>
+            <div class="form-row">
+              <label>Nota</label><input name="Nota" type="number" step="0.1" min="0" max="100" />
+            </div>
+            <div class="form-row">
+              <label>Status</label>
+              <select name="Status">
+                <option>Ativo</option><option>Pendente</option><option>Inativo</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Comentários</label><textarea name="Comentários" rows="3"></textarea>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button type="submit">Salvar</button>
+              <button type="button" id="cancelEdit">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>Protótipo — mapeamento automático. pepellon-cmyk</small>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
